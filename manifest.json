@@ -1,0 +1,14 @@
+{
+    "manifest_version": 3,
+    "name": "ContainerTabVault",
+    "description": "Save and restore tabs configuration",
+    "version": "0.1.0",
+    "background": {
+        "scripts": ["background.js"]
+    },
+    "action": {
+        "default_popup": "index.html"
+    },
+    "permissions": [
+    ]
+}
