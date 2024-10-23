@@ -3,5 +3,15 @@ export interface Message {
 }
 
 export enum MessageCommand {
-    DuplicateTab
+    SaveOpenedTabs,
+    OpenSavedTabs
+}
+
+export interface State {
+    tabs: Tab[]
+}
+
+export interface Tab {
+    url: string | undefined,
+    cookieStoreId: string
 }

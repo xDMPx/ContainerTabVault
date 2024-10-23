@@ -11,6 +11,12 @@
     },
     "permissions": [
         "tabs",
+        "storage",
         "cookies"
-    ]
+    ],
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "containertabvault@xdmpx"
+        }
+    }
 }
