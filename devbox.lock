@@ -65,6 +65,54 @@
           "store_path": "/nix/store/f9yl8nlgcyazflxc2nj1cr9k9ika7v7z-nodejs-22.9.0"
         }
       }
+    },
+    "web-ext@latest": {
+      "last_modified": "2024-10-13T23:44:06Z",
+      "resolved": "github:NixOS/nixpkgs/d4f247e89f6e10120f911e2e2d2254a050d0f732#web-ext",
+      "source": "devbox-search",
+      "version": "8.3.0",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/zg4gzhk0h9zv97rdk25cb2sw5rzn72cy-web-ext-8.3.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/zg4gzhk0h9zv97rdk25cb2sw5rzn72cy-web-ext-8.3.0"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/5hf059wzc2x30p6dsgp0ljis7ydv7pzs-web-ext-8.3.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/5hf059wzc2x30p6dsgp0ljis7ydv7pzs-web-ext-8.3.0"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/zcnv097mfwgqqmjsgh5wf6asim08gch5-web-ext-8.3.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/zcnv097mfwgqqmjsgh5wf6asim08gch5-web-ext-8.3.0"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/fq5y97yivlacvvka2cy9avxm942qm5fb-web-ext-8.3.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/fq5y97yivlacvvka2cy9avxm942qm5fb-web-ext-8.3.0"
+        }
+      }
     }
   }
 }
