@@ -1,22 +1,8 @@
 import browser from "webextension-polyfill";
-import { Message, MessageCommand, State, Tab } from "./interfaces.mjs";
+import { Message, MessageCommand, Tab } from "./interfaces.mjs";
+import { setState, getState } from "./utils.mjs";
 
 console.log(`ContainerTabVault; start => ${Date.now()}`);
-
-async function getState(): Promise<State> {
-    let { state }: { [key: string]: State | undefined } = await chrome.storage.local.get("state");
-    if (state == undefined) {
-        state = {
-            tabs: []
-        }
-    }
-
-    return state;
-}
-
-async function setState(state: State) {
-    await chrome.storage.local.set({ state: state });
-}
 
 browser.runtime.onMessage.addListener(async (_msg: unknown, _sender, _sendResponse) => {
     if (typeof _msg !== "object" || _msg === null) return;
@@ -29,11 +15,20 @@ browser.runtime.onMessage.addListener(async (_msg: unknown, _sender, _sendRespon
             const tab: Tab = { url: url, cookieStoreId: t.cookieStoreId! };
             return tab;
         });
-        const state: State = { tabs: state_tabs };
+        const state = await getState();
+        state.tabs = state_tabs;
+        state.closeTabs = state.closeTabs;
         setState(state);
     }
     if (msg.command === MessageCommand.OpenSavedTabs) {
         const state = await getState();
+
+        let opened_tabs: number[] = [];
+        if (state.closeTabs === true) {
+            opened_tabs = (await browser.tabs.query({}))
+                .map((t) => t.id).filter((t) => t !== undefined);
+        }
+
         const tabs = state.tabs;
         for (const tab of tabs) {
             browser.tabs.create({
@@ -41,5 +36,7 @@ browser.runtime.onMessage.addListener(async (_msg: unknown, _sender, _sendRespon
                 cookieStoreId: tab.cookieStoreId
             });
         }
+
+        browser.tabs.remove(opened_tabs)
     }
 });

@@ -9,6 +9,7 @@ export enum MessageCommand {
 
 export interface State {
     tabs: Tab[]
+    closeTabs: boolean,
 }
 
 export interface Tab {
