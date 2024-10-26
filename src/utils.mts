@@ -1,18 +1,22 @@
-import { State } from "./interfaces.mjs";
+import { instanceOfState, State } from "./interfaces.mjs";
+import browser from "webextension-polyfill";
 
 export async function getState(): Promise<State> {
-    let { state }: { [key: string]: State | undefined } = await chrome.storage.local.get("state");
-    if (state == undefined) {
-        state = {
+    let { state }: { [key: string]: unknown | undefined } = (await browser.storage.local.get("state"));
+    if (instanceOfState(state)) {
+        return state;
+    }
+    else {
+        const state = {
             tabs: [],
             closeTabs: false,
         }
+        return state;
     }
 
-    return state;
 }
 
 export async function setState(state: State) {
-    await chrome.storage.local.set({ state: state });
+    await browser.storage.local.set({ state: state });
 }
 
