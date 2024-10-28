@@ -4,6 +4,13 @@ import { setState, getState } from "./utils.mjs";
 
 console.log(`ContainerTabVault; start => ${Date.now()}`);
 
+browser.runtime.onInstalled.addListener(async (details: browser.Runtime.OnInstalledDetailsType) => {
+    if (details.reason === "update") {
+        console.log("state clear");
+        await browser.storage.local.clear();
+    }
+});
+
 browser.runtime.onMessage.addListener(async (_msg: unknown, _sender, _sendResponse) => {
     if (typeof _msg !== "object" || _msg === null) return;
     const msg = _msg as Message;
@@ -16,12 +23,14 @@ browser.runtime.onMessage.addListener(async (_msg: unknown, _sender, _sendRespon
             return tab;
         });
         const state = await getState();
-        state.tabs = state_tabs;
-        state.closeTabs = state.closeTabs;
+        const last_index = [...state.tabs.keys()].map((k) => +k.slice(9)).sort().pop() || 0;
+        state.tabs.set(`Workspace ${last_index + 1}`, state_tabs);
         setState(state);
     }
     if (msg.command === MessageCommand.OpenSavedTabs) {
         const state = await getState();
+        const name = msg.savedWorkspaceName;
+        if (name === undefined) return;
 
         let opened_tabs: number[] = [];
         if (state.closeTabs === true) {
@@ -29,7 +38,9 @@ browser.runtime.onMessage.addListener(async (_msg: unknown, _sender, _sendRespon
                 .map((t) => t.id).filter((t) => t !== undefined);
         }
 
-        const tabs = state.tabs;
+        const tabs = state.tabs.get(name);
+        if (tabs === undefined) return;
+
         for (const tab of tabs) {
             browser.tabs.create({
                 url: tab.url,

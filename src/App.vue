@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import browser from "webextension-polyfill";
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, Ref } from 'vue';
 import { Message, MessageCommand } from './interfaces.mjs';
 import { getState, setState } from "./utils.mjs";
 
 const closeTabs = ref(false);
+const savedNames: Ref<string[]> = ref([]);
 
 function onSaveOpenedTabsClick() {
-    let msg: Message = { command: MessageCommand.SaveOpenedTabs };
+    let msg: Message = { command: MessageCommand.SaveOpenedTabs, savedWorkspaceName: undefined };
     browser.runtime.sendMessage(msg);
 }
 
-function onOpenSavedTabsClick() {
-    let msg: Message = { command: MessageCommand.OpenSavedTabs };
+function onWorkspaceNameClick(name: string) {
+    let msg: Message = { command: MessageCommand.OpenSavedTabs, savedWorkspaceName: name };
     browser.runtime.sendMessage(msg);
 }
 
@@ -28,8 +29,15 @@ async function getCloseTabsValue(): Promise<boolean> {
     return state.closeTabs;
 }
 
+
+async function getSavedWorkspacesNames(): Promise<string[]> {
+    const state = await getState();
+    return [...state.tabs.keys()];
+}
+
 function onMountedHook() {
     getCloseTabsValue().then((value) => closeTabs.value = value);
+    getSavedWorkspacesNames().then((values) => savedNames.value = values);
 }
 
 onMounted(onMountedHook);
@@ -37,11 +45,12 @@ onMounted(onMountedHook);
 
 <template>
     <div class="w-full h-full table p-2 space-y-2">
+        <div v-for="name in savedNames">
+            <button class="btn btn-link btn-xs" @click="onWorkspaceNameClick(name)">{{ name }}</button>
+        </div>
+        <div class="divider" />
         <div class="flex justify-center">
             <button class="btn btn-sm btn-secondary" @click="onSaveOpenedTabsClick">Save Opened Tabs</button>
-        </div>
-        <div class="flex justify-center">
-            <button class="btn btn-sm btn-secondary" @click="onOpenSavedTabsClick">Open Saved Tabs</button>
         </div>
         <div class="divider" />
         <div class="form-control">

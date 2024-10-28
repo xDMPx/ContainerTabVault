@@ -1,5 +1,6 @@
 export interface Message {
     command: MessageCommand,
+    savedWorkspaceName: string | undefined,
 }
 
 export enum MessageCommand {
@@ -8,7 +9,7 @@ export enum MessageCommand {
 }
 
 export interface State {
-    tabs: Tab[]
+    tabs: Map<string, Tab[]>,
     closeTabs: boolean,
 }
 
