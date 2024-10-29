@@ -7,9 +7,10 @@ import { getState, setState } from "./utils.mjs";
 const closeTabs = ref(false);
 const savedNames: Ref<string[]> = ref([]);
 
-function onSaveOpenedTabsClick() {
+async function onSaveOpenedTabsClick() {
     let msg: Message = { command: MessageCommand.SaveOpenedTabs, savedWorkspaceName: undefined };
-    browser.runtime.sendMessage(msg);
+    await browser.runtime.sendMessage(msg);
+    onMountedHook();
 }
 
 function onWorkspaceNameClick(name: string) {
@@ -17,9 +18,10 @@ function onWorkspaceNameClick(name: string) {
     browser.runtime.sendMessage(msg);
 }
 
-function onDeleteWorkspaceClick(name: string) {
+async function onDeleteWorkspaceClick(name: string) {
     let msg: Message = { command: MessageCommand.DeleteWorkspace, savedWorkspaceName: name };
-    browser.runtime.sendMessage(msg);
+    await browser.runtime.sendMessage(msg);
+    onMountedHook();
 }
 
 async function toggleCloseTabs() {
