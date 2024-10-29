@@ -50,4 +50,13 @@ browser.runtime.onMessage.addListener(async (_msg: unknown, _sender, _sendRespon
 
         browser.tabs.remove(opened_tabs)
     }
+    if (msg.command === MessageCommand.DeleteWorkspace) {
+        const state = await getState();
+        const name = msg.savedWorkspaceName;
+        if (name === undefined) return;
+
+        state.tabs.delete(name);
+
+        setState(state);
+    }
 });

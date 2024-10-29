@@ -5,7 +5,8 @@ export interface Message {
 
 export enum MessageCommand {
     SaveOpenedTabs,
-    OpenSavedTabs
+    OpenSavedTabs,
+    DeleteWorkspace,
 }
 
 export interface State {

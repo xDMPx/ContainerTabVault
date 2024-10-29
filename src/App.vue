@@ -17,6 +17,11 @@ function onWorkspaceNameClick(name: string) {
     browser.runtime.sendMessage(msg);
 }
 
+function onDeleteWorkspaceClick(name: string) {
+    let msg: Message = { command: MessageCommand.DeleteWorkspace, savedWorkspaceName: name };
+    browser.runtime.sendMessage(msg);
+}
+
 async function toggleCloseTabs() {
     const state = await getState();
     state.closeTabs = !state.closeTabs;
@@ -47,6 +52,7 @@ onMounted(onMountedHook);
     <div class="w-full h-full table p-2 space-y-2">
         <div v-for="name in savedNames">
             <button class="btn btn-link btn-xs" @click="onWorkspaceNameClick(name)">{{ name }}</button>
+            <button class="btn btn-ghost btn-xs" @click="onDeleteWorkspaceClick(name)">X</button>
         </div>
         <div class="divider" />
         <div class="flex justify-center">
