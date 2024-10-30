@@ -1,12 +1,14 @@
 export interface Message {
     command: MessageCommand,
     savedWorkspaceName: string | undefined,
+    newWorkspaceName: string | undefined,
 }
 
 export enum MessageCommand {
     SaveOpenedTabs,
     OpenSavedTabs,
     DeleteWorkspace,
+    RenameWorkspace,
 }
 
 export interface State {

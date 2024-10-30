@@ -14,6 +14,8 @@ browser.runtime.onInstalled.addListener(async (details: browser.Runtime.OnInstal
 browser.runtime.onMessage.addListener(async (_msg: unknown, _sender, _sendResponse) => {
     if (typeof _msg !== "object" || _msg === null) return;
     const msg = _msg as Message;
+    console.log(`ContainerTabVault; onMessage => `);
+    console.log(msg);
 
     if (msg.command === MessageCommand.SaveOpenedTabs) {
         const tabs = (await browser.tabs.query({}));
@@ -56,6 +58,20 @@ browser.runtime.onMessage.addListener(async (_msg: unknown, _sender, _sendRespon
         if (name === undefined) return;
 
         state.tabs.delete(name);
+
+        setState(state);
+    }
+    if (msg.command === MessageCommand.RenameWorkspace) {
+        const state = await getState();
+        const name = msg.savedWorkspaceName;
+        const new_name = msg.newWorkspaceName;
+        if (name === undefined || new_name === undefined) return;
+
+        const tabs = state.tabs.get(name);
+        if (tabs !== undefined) {
+            state.tabs.set(new_name, tabs);
+            state.tabs.delete(name);
+        }
 
         setState(state);
     }
