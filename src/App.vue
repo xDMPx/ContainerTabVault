@@ -74,8 +74,9 @@ onMounted(onMountedHook);
 <template>
     <div class="w-full h-full table p-2 space-y-2">
         <div v-for="name in savedNames">
-            <div class="flex" v-if="editWorkspace !== name">
-                <button class="btn btn-link btn-xs" @click="onWorkspaceNameClick(name)">{{ name }}</button>
+            <div class="flex flex-row" v-if="editWorkspace !== name">
+                <button class="btn btn-link btn-xs grow justify-start" @click="onWorkspaceNameClick(name)">{{ name
+                    }}</button>
                 <button class="btn btn-ghost btn-xs" @click="onEditWorkspaceNameClick(name)">
                     <!-- https://github.com/google/material-design-icons#license -->
                     <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"
@@ -92,7 +93,6 @@ onMounted(onMountedHook);
                             d="M312-144q-29.7 0-50.85-21.15Q240-186.3 240-216v-480h-48v-72h192v-48h192v48h192v72h-48v479.57Q720-186 698.85-165T648-144H312Zm336-552H312v480h336v-480ZM384-288h72v-336h-72v336Zm120 0h72v-336h-72v336ZM312-696v480-480Z" />
                     </svg>
                 </button>
-
             </div>
             <div v-else>
                 <input ref="workspaceNameInput" type="text" v-model="newWorkspaceName"
