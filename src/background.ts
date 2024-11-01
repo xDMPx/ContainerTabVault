@@ -25,7 +25,11 @@ browser.runtime.onMessage.addListener(async (_msg: unknown, _sender, _sendRespon
             return tab;
         });
         const state = await getState();
-        const last_index = [...state.tabs.keys()].map((k) => +k.slice(9)).sort().pop() || 0;
+        const last_index = [...state.tabs.keys()].map((k) => +k.slice(9))
+            .filter((x: number) => !Number.isNaN(x))
+            .sort().pop() || 0;
+
+
         state.tabs.set(`Workspace ${last_index + 1}`, state_tabs);
         setState(state);
     }
