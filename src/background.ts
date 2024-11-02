@@ -69,7 +69,7 @@ browser.runtime.onMessage.addListener(async (_msg: unknown, _sender, _sendRespon
         const state = await getState();
         const name = msg.savedWorkspaceName;
         const new_name = msg.newWorkspaceName;
-        if (name === undefined || new_name === undefined) return;
+        if (name === undefined || new_name === undefined || state.tabs.has(new_name)) return;
 
         const tabs = state.tabs.get(name);
         if (tabs !== undefined) {
