@@ -23,15 +23,16 @@ function onWorkspaceNameClick(name: string) {
 
 function onEditWorkspaceNameClick(name: string) {
     editWorkspace.value = name;
-    newWorkspaceName.value = name;
+    newWorkspaceName.value = name.substring(name.indexOf(';') + 1);
     nextTick(() => {
         workspaceNameInput.value!.at(0)!.focus();
     });
 }
 
 async function onSaveWorkspaceNameClick(name: string, new_name: string) {
-    if (name !== new_name) {
-        let msg: Message = { command: MessageCommand.RenameWorkspace, savedWorkspaceName: name, newWorkspaceName: new_name };
+    const new_name_with_id = `${name.substring(0, name.indexOf(';') + 1)}${new_name}`;
+    if (name !== new_name_with_id) {
+        let msg: Message = { command: MessageCommand.RenameWorkspace, savedWorkspaceName: name, newWorkspaceName: new_name_with_id };
         await browser.runtime.sendMessage(msg);
     }
     editWorkspace.value = null;
@@ -57,10 +58,9 @@ async function getCloseTabsValue(): Promise<boolean> {
     return state.closeTabs;
 }
 
-
 async function getSavedWorkspacesNames(): Promise<string[]> {
     const state = await getState();
-    return [...state.tabs.keys()];
+    return [...state.tabs.keys()].sort();
 }
 
 function onMountedHook() {
@@ -75,8 +75,9 @@ onMounted(onMountedHook);
     <div class="w-full h-full table p-2 space-y-2">
         <div v-for="name in savedNames">
             <div class="flex flex-row" v-if="editWorkspace !== name">
-                <button class="btn btn-link btn-xs grow justify-start" @click="onWorkspaceNameClick(name)">{{ name
-                    }}</button>
+                <button class="btn btn-link btn-xs grow justify-start" @click="onWorkspaceNameClick(name)">{{
+                    name.substring(name.indexOf(';') + 1)
+                }}</button>
                 <button class="btn btn-ghost btn-xs" @click="onEditWorkspaceNameClick(name)">
                     <!-- https://github.com/google/material-design-icons#license -->
                     <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"

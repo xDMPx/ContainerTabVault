@@ -18,7 +18,7 @@ export interface State {
 
 export interface Tab {
     url: string | undefined,
-    cookieStoreId: string
+    cookieStoreId: string,
 }
 
 export function instanceOfState(object: any): object is State {

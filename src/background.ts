@@ -25,12 +25,11 @@ browser.runtime.onMessage.addListener(async (_msg: unknown, _sender, _sendRespon
             return tab;
         });
         const state = await getState();
-        const last_index = [...state.tabs.keys()].map((k) => +k.slice(9))
+        const last_index = [...state.tabs.keys()].map((k) => +k.slice(0, k.indexOf(';')))
             .filter((x: number) => !Number.isNaN(x))
             .sort().pop() || 0;
 
-
-        state.tabs.set(`Workspace ${last_index + 1}`, state_tabs);
+        state.tabs.set(`${last_index + 1};Workspace ${last_index + 1}`, state_tabs);
         setState(state);
     }
     if (msg.command === MessageCommand.OpenSavedTabs) {
@@ -69,7 +68,9 @@ browser.runtime.onMessage.addListener(async (_msg: unknown, _sender, _sendRespon
         const state = await getState();
         const name = msg.savedWorkspaceName;
         const new_name = msg.newWorkspaceName;
-        if (name === undefined || new_name === undefined || state.tabs.has(new_name)) return;
+        if (name === undefined || new_name === undefined) return;
+        const name_taken = [...state.tabs.keys()].map((k) => k.substring(k.indexOf(';') + 1)).find((k) => k == new_name.substring(new_name.indexOf(';') + 1));
+        if (name_taken) return;
 
         const tabs = state.tabs.get(name);
         if (tabs !== undefined) {
