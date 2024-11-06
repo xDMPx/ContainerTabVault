@@ -11,6 +11,7 @@ export async function getState(): Promise<State> {
         const state = {
             tabs: new Map(),
             closeTabs: false,
+            openTabsInNewWindow: false,
         }
         return state;
     }

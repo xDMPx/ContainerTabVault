@@ -46,10 +46,13 @@ browser.runtime.onMessage.addListener(async (_msg: unknown, _sender, _sendRespon
         const tabs = state.tabs.get(name);
         if (tabs === undefined) return;
 
+        const newWindowId = state.openTabsInNewWindow ? (await browser.windows.create()).id : undefined;
+
         for (const tab of tabs) {
             browser.tabs.create({
                 url: tab.url,
-                cookieStoreId: tab.cookieStoreId
+                cookieStoreId: tab.cookieStoreId,
+                windowId: newWindowId,
             });
         }
 

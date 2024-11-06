@@ -5,6 +5,7 @@ import { Message, MessageCommand } from './interfaces.mjs';
 import { getState, setState } from "./utils.mjs";
 
 const closeTabs = ref(false);
+const openTabsInNewWindow = ref(false);
 const savedNames: Ref<string[]> = ref([]);
 const editWorkspace: Ref<string | null> = ref(null);
 const newWorkspaceName: Ref<string> = ref("");
@@ -53,9 +54,21 @@ async function toggleCloseTabs() {
     await setState(state);
 }
 
+async function toggleOpenTabsInNewWindow() {
+    const state = await getState();
+    state.openTabsInNewWindow = !state.openTabsInNewWindow;
+    console.log(`ContainerTabVaultPopup; openTabsInNewWindow => ${state.openTabsInNewWindow}`);
+    await setState(state);
+}
+
 async function getCloseTabsValue(): Promise<boolean> {
     const state = await getState();
     return state.closeTabs;
+}
+
+async function getOpenTabsInNewWindowValue(): Promise<boolean> {
+    const state = await getState();
+    return state.openTabsInNewWindow;
 }
 
 async function getSavedWorkspacesNames(): Promise<string[]> {
@@ -65,6 +78,7 @@ async function getSavedWorkspacesNames(): Promise<string[]> {
 
 function onMountedHook() {
     getCloseTabsValue().then((value) => closeTabs.value = value);
+    getOpenTabsInNewWindowValue().then((value) => openTabsInNewWindow.value = value);
     getSavedWorkspacesNames().then((values) => savedNames.value = values);
 }
 
@@ -77,7 +91,7 @@ onMounted(onMountedHook);
             <div class="flex flex-row" v-if="editWorkspace !== name">
                 <button class="btn btn-link btn-xs grow justify-start" @click="onWorkspaceNameClick(name)">{{
                     name.substring(name.indexOf(';') + 1)
-                }}</button>
+                    }}</button>
                 <button class="btn btn-ghost btn-xs" @click="onEditWorkspaceNameClick(name)">
                     <!-- https://github.com/google/material-design-icons#license -->
                     <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"
@@ -113,6 +127,14 @@ onMounted(onMountedHook);
                     checked="true" />
             </label>
         </div>
+        <div class="form-control">
+            <label class="label cursor-pointer mr-auto">
+                <span class="label-text pr-2">Restore workspace in new window:</span>
+                <input class="checkbox" @click="toggleOpenTabsInNewWindow" v-model="openTabsInNewWindow"
+                    name="openTabsInNewWindow" type="checkbox" checked="true" />
+            </label>
+        </div>
+
     </div>
 </template>
 

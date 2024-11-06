@@ -14,6 +14,7 @@ export enum MessageCommand {
 export interface State {
     tabs: Map<string, Tab[]>,
     closeTabs: boolean,
+    openTabsInNewWindow: boolean,
 }
 
 export interface Tab {
