@@ -18,7 +18,7 @@ browser.runtime.onMessage.addListener(async (_msg: unknown, _sender, _sendRespon
     console.log(msg);
 
     if (msg.command === MessageCommand.SaveOpenedTabs) {
-        const tabs = (await browser.tabs.query({}));
+        const tabs = (await browser.tabs.query({ currentWindow: true }));
         const state_tabs = tabs.map((t) => {
             const url = (t?.url?.startsWith("about:")) ? undefined : t?.url;
             const tab: Tab = { url: url, cookieStoreId: t.cookieStoreId! };
@@ -39,7 +39,7 @@ browser.runtime.onMessage.addListener(async (_msg: unknown, _sender, _sendRespon
 
         let opened_tabs: number[] = [];
         if (state.closeTabs === true) {
-            opened_tabs = (await browser.tabs.query({}))
+            opened_tabs = (await browser.tabs.query({ currentWindow: true }))
                 .map((t) => t.id).filter((t) => t !== undefined);
         }
 
