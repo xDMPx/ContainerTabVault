@@ -2,7 +2,7 @@
 import browser from "webextension-polyfill";
 import { ref, onMounted, Ref, nextTick } from 'vue';
 import { Message, MessageCommand } from './interfaces.mjs';
-import { getState, setState } from "./utils.mjs";
+import { getState, getTabs, setState } from "./utils.mjs";
 
 const closeTabs = ref(false);
 const openTabsInNewWindow = ref(false);
@@ -15,6 +15,19 @@ async function onSaveOpenedTabsClick() {
     let msg: Message = { command: MessageCommand.SaveOpenedTabs, savedWorkspaceName: undefined, newWorkspaceName: undefined };
     await browser.runtime.sendMessage(msg);
     onMountedHook();
+}
+
+async function onExportClick() {
+    const exportData = await getTabs();
+    const blob = new Blob([exportData.join('\n\n')], { type: 'text/plain' });
+
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'ContainerTabVault-export.txt';
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
 
 function onWorkspaceNameClick(name: string) {
@@ -134,6 +147,11 @@ onMounted(onMountedHook);
                     name="openTabsInNewWindow" type="checkbox" checked="true" />
             </label>
         </div>
+        <div class="divider" />
+        <div class="flex justify-center">
+            <button class="btn btn-sm btn-secondary" @click="onExportClick">Export</button>
+        </div>
+
 
     </div>
 </template>
