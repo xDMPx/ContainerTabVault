@@ -6,8 +6,13 @@ console.log(`ContainerTabVault; start => ${Date.now()}`);
 
 browser.runtime.onInstalled.addListener(async (details: browser.Runtime.OnInstalledDetailsType) => {
     if (details.reason === "update") {
-        console.log("state clear");
+        console.log("ContainerTabVault; state clear, but preserving saved workspaces");
+        const old_state = await getState();
+        const tabs = old_state.tabs;
         await browser.storage.local.clear();
+        const state = await getState();
+        state.tabs = tabs;
+        await setState(state);
     }
 });
 
