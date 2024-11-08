@@ -6,6 +6,7 @@ module.exports = {
     entry: {
         background: './src/background.ts',
         popup: './src/main.ts',
+        options: './src/options/main.ts',
     },
     module: {
         rules: [
@@ -53,6 +54,7 @@ module.exports = {
             patterns: [
                 { from: "./manifest.json", to: "./" },
                 { from: "./src/index.html", to: "./" },
+                { from: "./src/options/options.html", to: "./" },
             ],
         }),
         new VueLoaderPlugin(),
