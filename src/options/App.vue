@@ -38,8 +38,9 @@ async function onImportClick(event: Event) {
                 const i = line.lastIndexOf(';');
                 const url = line.slice(0, i);
                 const cookieStoreId = line.slice(i + 1);
+
                 tabs.push({
-                    url: url,
+                    url: (url !== "undefined") ? url : undefined,
                     cookieStoreId: cookieStoreId
                 });
             }
