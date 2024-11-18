@@ -53,13 +53,46 @@ browser.runtime.onMessage.addListener(async (_msg: unknown, _sender, _sendRespon
 
         const newWindowId = state.openTabsInNewWindow ? (await browser.windows.create()).id : undefined;
 
+        const files: string[] = [];
         for (const tab of tabs) {
+            if (tab.url?.startsWith("file://")) {
+                files.push(tab.url);
+                continue;
+            };
             browser.tabs.create({
                 url: tab.url,
                 cookieStoreId: tab.cookieStoreId,
                 windowId: newWindowId,
             });
         }
+
+        if (files.length > 0) {
+            const a = await browser.tabs.create({
+                url: "files.html",
+                windowId: newWindowId,
+            });
+
+            console.log(`ContainerTabVault; Generating files html => `);
+            console.log(files);
+            function insert_file_html() {
+                browser.scripting.executeScript({
+                    target: { tabId: a.id! },
+                    func: (files: string[]) => {
+                        for (const file of files) {
+                            const a = document.createElement("a");
+                            a.href = file;
+                            a.text = decodeURI(file.substring(file.lastIndexOf('/') + 1));
+                            document.body.getElementsByTagName("div").item(0)?.append(a);
+                        }
+                    },
+                    args: [files]
+                });
+                browser.tabs.onUpdated.removeListener(insert_file_html);
+            }
+
+            browser.tabs.onUpdated.addListener(insert_file_html, { tabId: a.id! })
+        }
+
 
         browser.tabs.remove(opened_tabs)
     }

@@ -55,6 +55,7 @@ module.exports = {
                 { from: "./manifest.json", to: "./" },
                 { from: "./src/index.html", to: "./" },
                 { from: "./src/options/options.html", to: "./" },
+                { from: "./src/files.html", to: "./" },
             ],
         }),
         new VueLoaderPlugin(),

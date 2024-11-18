@@ -15,7 +15,8 @@
     "permissions": [
         "tabs",
         "storage",
-        "cookies"
+        "cookies",
+        "scripting"
     ],
     "browser_specific_settings": {
         "gecko": {
