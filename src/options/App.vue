@@ -1,6 +1,9 @@
 <script setup lang="ts">
+import { useTemplateRef, ShallowRef } from "vue";
 import { getState, setState, getTabs } from "../utils.mjs";
 import { Tab } from "../interfaces.mjs";
+
+const imporFileInput: Readonly<ShallowRef<HTMLInputElement | null>> = useTemplateRef('import-file-input');
 
 async function onExportClick() {
     const exportData = await getTabs();
@@ -61,7 +64,6 @@ async function onImportClick(event: Event) {
         }
 
     });
-
 }
 </script>
 
@@ -73,8 +75,9 @@ async function onImportClick(event: Event) {
     </div>
     <div class="flex justify-center">
         <div class="grid gap-2 grid-cols-1">
-            <span class="label-text">Import: </span>
-            <input type="file" class="file-input file-input-bordered file-input-sm w-min" @change="onImportClick">
+            <button class="btn btn-sm btn-secondary" @click="imporFileInput?.click()">Import</button>
+            <input hidden type="file" class="file-input file-input-bordered file-input-sm w-min" @change="onImportClick"
+                ref="import-file-input">
         </div>
     </div>
 </template>
